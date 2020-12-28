@@ -2,7 +2,10 @@ import hashlib
 
 
 def _hash(string):
-    return str(str(hashlib.sha256(str.encode(string)).hexdigest()))
+    if string == "":
+        return ""
+    else:
+        return str(hashlib.sha256(str.encode(string)).hexdigest())
 
 
 class MerkleTree:
@@ -21,10 +24,8 @@ class MerkleTree:
             k = k + 1
 
     def _parent_index(self, child_index):
-        # child_index = self._merkle_tree.index(child)
         if child_index == 0:
             raise ValueError("This is the root")
-            # return 0
         if child_index % 2 == 0:
             return int(child_index / 2) - 1
         else:
@@ -57,12 +58,12 @@ class MerkleTree:
     def _get_right_child_value(self, node_index):
         return self._merkle_tree[self._get_right_child_index(node_index)]
 
-    def recursive_evaluation(self, parent_node_index):
-        if self._has_left_child(parent_node_index):
-            self._merkle_tree[parent_node_index] = _hash(
-                self.recursive_evaluation(self._get_left_child_index(parent_node_index))
-                + self.recursive_evaluation(self._get_right_child_index(parent_node_index)))
+    def recursive_evaluation(self, current_node_index):
+        if self._has_left_child(current_node_index):
+            self._merkle_tree[current_node_index] = _hash(
+                self.recursive_evaluation(self._get_left_child_index(current_node_index))
+                + self.recursive_evaluation(self._get_right_child_index(current_node_index)))
             print(self._merkle_tree)
-            return self._merkle_tree[parent_node_index]
+            return self._merkle_tree[current_node_index]
         else:
-            return _hash(self._merkle_tree[parent_node_index])
+            return _hash(self._merkle_tree[current_node_index])

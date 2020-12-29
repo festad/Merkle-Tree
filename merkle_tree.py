@@ -10,7 +10,6 @@ def _hash(string):
 
 
 class MerkleTree:
-
     def __init__(self, messages):
         _n_leaves = 1
         self._height = 0
